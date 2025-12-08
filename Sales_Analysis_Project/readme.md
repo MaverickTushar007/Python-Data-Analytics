@@ -1,166 +1,226 @@
-# 🛒 Sales Analysis Project — 12 Months of E-Commerce Data
+# 🛒 E-Commerce Sales Analysis — 12 Months of Transaction Data
 
-Welcome to my end-to-end analysis of a full year of e-commerce sales data.  
-This project explores revenue trends, city-wise performance, consumer buying behavior, product bundling, and pricing patterns.
+This project is a complete **end-to-end analytics pipeline** built using Python.  
+It analyzes **180,000+ e-commerce transactions** over a full year to uncover:
 
-Using Python and a complete analytics workflow, I transformed 180,000+ rows of transactional data into clear and actionable business insights.
+- Revenue trends  
+- City-level performance  
+- Consumer purchase timing  
+- Product bundling patterns  
+- Price–demand relationships  
+
+The goal is to turn raw transactional data into **clear, actionable business insights** using data cleaning, feature engineering, exploratory data analysis (EDA), and visual storytelling.
 
 ---
 
-# 📌 Key Business Questions
+## 🎯 Key Business Questions
 
-1. **What was the best month for sales? How much revenue did it generate?**  
-2. **Which U.S. city had the highest sales?**  
-3. **What time of day should advertisements be displayed for maximum effectiveness?**  
+1. **Which month generated the highest sales revenue?**  
+2. **Which U.S. city had the strongest sales performance?**  
+3. **What time of day is best for running advertisements?**  
 4. **Which products are frequently bought together?**  
 5. **Which products sell the most, and how does price affect demand?**
 
 ---
 
-# 🛠 Tools & Technologies
+## 🛠 Tools & Technologies
 
-### **Python Libraries**
-- **Pandas** — Data manipulation & cleaning  
-- **Matplotlib** — Foundational plotting  
-- **Seaborn** — Enhanced visualizations  
-- **itertools + Counter** — Market basket analysis  
+### Python Libraries
+- **Pandas** — Data cleaning, joining, and transformation  
+- **Matplotlib** — Base visualizations  
+- **Seaborn** — Enhanced charts and styling  
+- **itertools**, **collections.Counter** — Market basket / bundling analysis  
 
-### **Environment**
-- Jupyter Notebook  
-- Visual Studio Code  
-- Git & GitHub for version control  
-
----
-
-# 🧹 Data Preparation
-
-To make the dataset usable, several cleaning and transformation steps were performed:
-
-- Merged all **12 monthly CSV files**  
-- Removed header duplicates and corrupted rows  
-- Converted `"Order Date"` into proper datetime format  
-- Created new features:
-  - **Month**
-  - **Hour**
-  - **City** (parsed from Purchase Address)
-  - **Sales = Quantity × Price**
-- Cleaned numeric columns  
-- Identified duplicate Order IDs for bundle analysis  
+### Environment
+- **Jupyter Notebook** — Interactive analysis  
+- **VS Code** — Development and organization  
+- **Git & GitHub** — Version control and project tracking  
 
 ---
 
-# 📊 Analysis & Visual Results
+## 🧹 Data Preparation Workflow
+
+To make the dataset analysis-ready, I performed the following:
+
+### 1. Data Merging & Validation
+- Combined **12 separate monthly CSV files** into a single DataFrame  
+- Removed:
+  - Duplicate header rows introduced during concatenation  
+  - Corrupted or empty rows  
+
+### 2. Feature Engineering
+Created new columns to enable richer analysis:
+
+- **`Month`** — extracted from `Order Date`  
+- **`Hour`** — extracted from `Order Date` to study purchase time patterns  
+- **`City`** — parsed from `Purchase Address` (e.g., `"San Francisco (CA)"`)  
+- **`Sales`** — computed as `Quantity Ordered × Price Each`  
+
+### 3. Data Type Fixes
+- Converted `Order Date` to `datetime` format  
+- Cast `Quantity Ordered` and `Price Each` to numeric types  
+
+### 4. Bundle Analysis Setup
+- Grouped rows by `Order ID`  
+- Identified orders with multiple products to detect **frequently bought together** pairs
 
 ---
 
-## **1️⃣ Best Month for Sales**
+## 📊 Analysis & Insights
 
-Total monthly revenue was calculated by multiplying Quantity Ordered × Price Each and grouping by month.
+---
 
-### 📈 Monthly Sales  
+### 1️⃣ Best Month for Sales
+
+**Goal:** Identify seasonal demand and revenue peaks.
+
+I computed monthly revenue by aggregating `Sales` values per month.
+
+#### 📈 Monthly Sales  
 ![Monthly Sales](Images/sales_per_month.png)
 
-### 🔍 Insight  
-- **December** generated the highest revenue (over **$4.5M**).
+**Insight:**  
+- **December** generated the highest revenue, with **> \$4.5M** in sales, driven by holiday-season demand.
 
 ---
 
-## **2️⃣ Which City Generated the Highest Sales?**
+### 2️⃣ Which City Generated the Highest Sales?
 
-Grouped revenue by city to determine geographic performance.
+**Goal:** Understand which U.S. cities drive the most revenue.
 
-### 🏙️ Sales by City  
+I grouped total `Sales` by `City` and visualized the results.
+
+#### 🏙️ Sales by City  
 ![Sales per City](Images/Sales_per_city.png)
 
-### 🔍 Insight  
-- **San Francisco** leads with over **$8M** in annual revenue.  
-- Major metropolitan areas exhibit strong purchasing power.
+**Insight:**  
+- **San Francisco** led with **> \$8M** in annual revenue.  
+- Large metropolitan and tech-focused cities (San Francisco, Los Angeles, New York) show significantly higher purchasing power.
 
 ---
 
-## **3️⃣ Optimal Advertisement Timing**
+### 3️⃣ Optimal Advertisement Timing
 
-By analyzing the hour-of-purchase data, the strongest purchasing spikes occur at:
+**Goal:** Identify the best times of day to show ads.
 
-- **11 AM**
-- **1 PM**
+I used the `Hour` feature from `Order Date` to find purchase spikes.
+
+**Peak purchase hours:**
+- **11 AM**  
+- **1 PM**  
 - **7 PM**
 
-These windows are optimal for showing advertisements.
+**Insight:**  
+- These time windows are the most effective for ad placement to maximize conversions.
 
 ---
 
-## **4️⃣ Products Most Frequently Sold Together**
+### 4️⃣ Products Most Frequently Bought Together
 
-Using transaction IDs and combinations:
+**Goal:** Discover product combinations suitable for bundling and cross-selling.
 
-Common pairings include:
+Using `Order ID` to group multi-product orders and `itertools.combinations` to count product pairs:
 
+**Common pairs include:**
 - **iPhone + Lightning Charging Cable**  
 - **Google Phone + USB-C Cable**  
 - **MacBook Pro + USB-C Adapter**
 
-These insights can be used to design effective bundle deals.
+**Insight:**  
+- These pairings can be turned into product bundles or targeted cross-sell recommendations.
 
 ---
 
-## **5️⃣ Which Products Sell the Most?**
+### 5️⃣ Which Products Sell the Most?
 
-### 📦 Quantity Ordered per Product  
+I aggregated `Quantity Ordered` per product.
+
+#### 📦 Quantity Ordered per Product  
 ![Quantity Ordered](Images/Quantity.png)
 
-### 🔍 Insight  
-- Low-cost accessories (batteries, cables) dominate in volume.  
-- Headphones and monitors are strong mid-range performers.
+**Insight:**  
+- Low-cost accessories (e.g., batteries, charging cables) dominate in quantity sold.  
+- Mid-range items like headphones and monitors also have strong volume.
 
 ---
 
-## **Price vs Quantity Analysis**
+### Price vs Quantity: Does Price Affect Demand?
 
-To understand how price affects demand, I overlaid product prices on the quantity chart.
+To examine price elasticity, I overlaid price information.
 
-### 📈 Quantity vs Price  
+#### 📈 Quantity vs Price  
 ![Price vs Quantity](Images/Price_vs_Quantity.png)
 
-### 🔍 Insight  
-- **Cheaper items → much higher sales volume**  
-- High-priced items (MacBook Pro, ThinkPad Laptop) sell fewer units but contribute significant revenue.
+**Key Observations:**
+- **Cheaper products → much higher sales volume.**  
+- High-ticket items (e.g., MacBook Pro, ThinkPad) sell fewer units but contribute significantly to revenue.  
+- Clear inverse relationship between product price and quantity sold for many SKUs.
 
 ---
 
-# 📚 What I Learned
+## 📚 What I Learned
 
-- How to clean and preprocess complex, real-world data  
-- Feature engineering from raw text fields  
-- Conducting time-series and geographic analyses  
-- Market basket analysis using combinations  
-- Dual-axis visualizations to compare quantity vs price  
-- Presenting insights in a business-friendly format  
+Through this project, I strengthened my skills in:
 
----
-
-# ⚠️ Challenges I Encountered
-
-- Handling inconsistencies and corrupted rows across CSVs  
-- Parsing addresses reliably  
-- Aligning product names across datasets  
-- Managing scaling differences for overlay charts  
+- Cleaning and preprocessing complex, real-world datasets  
+- Engineering features from semi-structured text (addresses, date strings)  
+- Performing **time-series** and **geographic** analysis  
+- Using **market basket analysis** to identify bundles  
+- Building dual-axis visualizations to compare price and volume  
+- Presenting technical findings in a business-oriented, insight-first format  
 
 ---
 
-# ✅ Conclusion
+## ⚠️ Challenges Faced
 
-This project demonstrates how data analytics can uncover:
+- Handling inconsistent and noisy rows across multiple CSV files  
+- Parsing address fields reliably into city/state components  
+- Ensuring consistent product naming across entries  
+- Managing scale differences when overlaying quantity and price on the same chart  
 
-- Seasonal peaks  
-- City-level performance differences  
-- Product bundling opportunities  
-- Price elasticity and demand patterns  
-- Optimal marketing/product strategies  
-
-It also strengthened my Python analytics skills and provided a polished, portfolio-ready project.
+These challenges led to a deeper understanding of real-world data issues and how to resolve them with Python.
 
 ---
 
-# 📂 Project Structure
+## ✅ Conclusion
 
+This project demonstrates how data analytics can reveal:
+
+- **Seasonal trends** in customer purchases  
+- **High-value geographic markets**  
+- **Optimal advertisement timing**  
+- **Product bundling opportunities**  
+- **Price–demand relationships**  
+
+It served as a full end-to-end practice in **Python-based data analytics**, from raw CSVs to business-ready insights, and is a core part of my data analytics portfolio.
+
+---
+
+## 📂 Project Structure
+
+```bash
+Sales_Analysis_Project/
+│
+├── Data/
+│   ├── Sales_January_2019.csv
+│   ├── Sales_February_2019.csv
+│   ├── ...
+│   └── Sales_December_2019.csv
+│
+├── Images/
+│   ├── sales_per_month.png
+│   ├── Sales_per_city.png
+│   ├── Quantity.png
+│   ├── Price_vs_Quantity.png
+│   └── (other supporting charts)
+│
+├── Notebooks/
+│   ├── 1_Merge_and_Clean_Data.ipynb
+│   ├── 2_Monthly_Sales_Analysis.ipynb
+│   ├── 3_City_Sales_Analysis.ipynb
+│   ├── 4_Ad_Timing_Analysis.ipynb
+│   ├── 5_Product_Bundling_Analysis.ipynb
+│   └── 6_Product_Demand_and_Price.ipynb
+│
+├── requirements.txt
+└── README.md
